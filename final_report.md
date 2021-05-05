@@ -2,6 +2,7 @@ CS 5010: Semester Project Report
 Jesse Katz, Matthew Edwards, Andrej Erkelens  
 Group #3  
 wgq5tw, me4bb, wsw3fa
+Github Address: https://github.com/andrejerkelens/prospecting_cfb
 
 ## A Data Driven Approach to the NFL Draft 
 #### Introduction:
