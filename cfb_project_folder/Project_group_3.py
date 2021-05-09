@@ -23,8 +23,8 @@ import unittest
 
 #######################Import PFF Data ######################
 
-# set a file path - make this path whatever you prefer on your machine
-filepath= 'C:/Users/jkatz/Desktop/UVA/Semester 1 - Spring 2021 (Feb 3, 2021 Start)/CS 5010/'
+# set a file path - make this path whatever you prefer on your machine. ENSURE ALL DATA AND IMAGES ARE SAVED IN THIS FILE PATH
+filepath= 'C:/Users/jkatz/Desktop/UVA/Semester 1 - Spring 2021 (Feb 3, 2021 Start)/CS 5010/Project/'
 file = '2020 PFF Data.csv'
 
 df = pd.read_csv(filepath + file, index_col=None, header=0) #load the file with pandas
@@ -224,10 +224,12 @@ plt.legend()
 plt.show()
 
 
-### Plot Tackles vs. Sacks for all Defensive Players with Team Logos as points ###
+## Plot Tackles vs. Sacks for all Defensive Players with Team Logos as points ###
+
+#Get the logos.... This takes a while
 
 # define the name of the directory to be created
-path = os.getcwd() + '\\Logos\\'
+path = filepath + 'Logos'
 
 try:
     os.mkdir(path)
@@ -235,22 +237,23 @@ except OSError:
     print ("Creation of the directory %s failed" % path)
 else:
     print ("Successfully created the directory %s " % path)
-
+    
 #read logos
 urls = pd.read_csv('https://raw.githubusercontent.com/spfleming/CFB/master/logos.csv')
 for i in range(0,len(urls)):
     try:
-        urllib.request.urlretrieve(urls['logo'].iloc[i], os.getcwd() + '\\Logos\\' + urls['school'].iloc[i] + '.png')
+        urllib.request.urlretrieve(urls['logo'].iloc[i], filepath + 'Logos/' + urls['school'].iloc[i] + '.png')
     except:
         pass # doing nothing on exception to skip where HTML not found
-        
+    
+### Plot Tackles vs. Sacks for all Defensive Players with Team Logos as points ###
         
 #for adding logos to  to charts
 def getImage(path): 
     return OffsetImage(plt.imread(path), zoom=.2)
 
 #store logos 
-logos = os.listdir(os.getcwd() + '\\Logos')
+logos = os.listdir(filepath + 'Logos')
 
 logo_paths = []
 team_names_lst =list(defensive_players['team_name'])
@@ -258,7 +261,7 @@ team_names_lst =list(defensive_players['team_name'])
 for lst in team_names_lst:
     for i in logos:
         if i.split('.')[0] == lst:
-            logo_paths.append(os.getcwd() + '\\Logos\\' + str(i))
+            logo_paths.append(filepath + 'Logos/' + str(i))
         else: 
             continue
 
@@ -492,7 +495,7 @@ def create_football_field(ezim=None, linenumbers=True,
 def fg_plots(kicker):
     dex = subset_fg[subset_fg['kicker'] == kicker].index[0]
     new_name = subset_fg.loc[dex]['full_name']
-    fig, ax = create_football_field(ezim=kicker[0:4]+'.png')
+    fig, ax = create_football_field(ezim=filepath+kicker[0:4]+'.png')
     subset_fg[(subset_fg['kick_result']=='MADE') & (subset_fg['kicker'] == kicker)].plot(x='kick_yards', y='hash_y', kind='scatter', ax=ax, color='blue', s=30, label='MADE')
     if len(subset_fg[(subset_fg['kick_result']=='MISS') & (subset_fg['kicker'] == kicker)]) != 0:
         subset_fg[(subset_fg['kick_result']=='MISS') & (subset_fg['kicker'] == kicker)].plot(x='kick_yards', y='hash_y', kind='scatter', ax=ax, color='red', s=30, label='MISS')
@@ -626,5 +629,5 @@ final_players["conferences"] = final_players["team_name"].map(conferences)
 
 
 ###############PRINT LIST OF FINAL PLAYERS AND STATS TO CSV FOR FINAL DRAFT BOARD###########
-final_players.to_csv('draft_targets.csv',index=False)
+final_players.to_csv(filepath+'draft_targets.csv',index=False)
 
